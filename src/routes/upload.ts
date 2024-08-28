@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { Router, Request, Response } from 'express'
 import { z } from 'zod'
 import { GoogleAIFileManager } from '@google/generative-ai/server'
@@ -7,14 +8,14 @@ import fs from 'fs'
 import { promisify } from 'util'
 import path, { dirname } from 'path'
 import { fileURLToPath } from 'url'
-import dotenv from 'dotenv'
 import { db } from 'src/db/connection'
 import dayjs from 'dayjs'
+import { env } from 'src/env'
+import { measures } from 'src/db/schema'
 
-dotenv.config()
 const router = Router()
-const fileManager = new GoogleAIFileManager(process.env.GEMINI_API_KEY!)
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!)
+const fileManager = new GoogleAIFileManager(env.GEMINI_API_KEY)
+const genAI = new GoogleGenerativeAI(env.GEMINI_API_KEY)
 const model = genAI.getGenerativeModel({
   model: 'gemini-1.5-flash',
 })
@@ -27,9 +28,7 @@ const uploadSchema = z.object({
   customer_code: z
     .string()
     .min(1, { message: 'O código do cliente é obrigatório' }),
-  measure_datetime: z
-    .string()
-    .refine((val) => !isNaN(Date.parse(val)), { message: 'Data inválida' }),
+  measure_datetime: z.coerce.date(),
   measure_type: z.enum(['WATER', 'GAS'], {
     message: 'Tipo de medição inválido',
   }),
@@ -95,6 +94,8 @@ router.post('/', async (req: Request, res: Response) => {
     displayName: 'Jetpack drawing',
   })
 
+  console.log(uploadResponse)
+
   const textResult = await model.generateContent([
     {
       fileData: {
@@ -107,9 +108,25 @@ router.post('/', async (req: Request, res: Response) => {
     },
   ])
 
-  console.log(textResult.response.text())
+  const actualMeasure = z.coerce.number().parse(textResult.response.text())
+
+  const [{ measure_uuid }] = await db
+    .insert(measures)
+    .values({
+      customer_code: result.data.customer_code,
+      image_url: uploadResponse.file.uri,
+      measure_datetime: result.data.measure_datetime,
+      measure_type: result.data.measure_type,
+    })
+    .returning({ measure_uuid: measures.measure_uuid })
 
   await unlink(tempFilePath)
+
+  return res.status(200).json({
+    image_url: uploadResponse.file.uri,
+    measure_value: actualMeasure,
+    measure_uuid,
+  })
 })
 
 export default router
