@@ -8,10 +8,13 @@ import fs from 'fs'
 import { promisify } from 'util'
 import path, { dirname } from 'path'
 import { fileURLToPath } from 'url'
-import { db } from 'src/db/connection'
+// import { db } from 'src/db/connection'
 import dayjs from 'dayjs'
-import { env } from 'src/env'
-import { measures } from 'src/db/schema'
+// import { env } from 'src/env'
+// import { measures } from 'src/db/schema'
+import { measures } from '../db/schema/measures.js'
+import { env } from '../env.js'
+import { db } from '../db/connection.js'
 
 const router = Router()
 const fileManager = new GoogleAIFileManager(env.GEMINI_API_KEY)
@@ -93,8 +96,6 @@ router.post('/upload', async (req: Request, res: Response) => {
     mimeType: 'image/jpeg',
     displayName: 'Jetpack drawing',
   })
-
-  console.log(uploadResponse)
 
   const textResult = await model.generateContent([
     {

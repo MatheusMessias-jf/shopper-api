@@ -8,7 +8,8 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "generate": "npx drizzle-kit generate",
-    "migrate": "tsx src/db/migration.ts"
+    "migrate": "tsx src/db/migration.ts",
+    "clear": "rm -rf dist"
   },
   "keywords": [],
   "author": "",

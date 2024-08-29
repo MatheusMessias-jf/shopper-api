@@ -1,7 +1,7 @@
 import express from 'express'
-import upload from './routes/upload'
-import confirm from './routes/confirm'
-import list from './routes/list'
+import upload from './routes/upload.js'
+import confirm from './routes/confirm.js'
+import list from './routes/list.js'
 import bodyParser from 'body-parser'
 
 const app = express()

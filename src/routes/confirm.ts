@@ -1,8 +1,8 @@
 /* eslint-disable camelcase */
 import { eq } from 'drizzle-orm'
 import { Router, Request, Response } from 'express'
-import { db } from 'src/db/connection'
-import { measures } from 'src/db/schema'
+import { db } from '../db/connection.js'
+import { measures } from '../db/schema/measures.js'
 import { z } from 'zod'
 
 const router = Router()

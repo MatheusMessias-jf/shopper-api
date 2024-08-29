@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import { Router, Request, Response } from 'express'
-import { db } from 'src/db/connection'
+import { db } from '../db/connection.js'
 import { z } from 'zod'
 
 const router = Router()
