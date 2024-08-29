@@ -51,13 +51,22 @@ router.post('/upload', async (req: Request, res: Response) => {
 
   const measuresIsOnDb = await db.query.measures.findFirst({
     // eslint-disable-next-line camelcase
-    where({ customer_code, measure_datetime, measure_type }, { and, eq, gte }) {
+    where(
+      { customer_code, measure_datetime, measure_type },
+      { and, eq, gte, lte },
+    ) {
       return and(
         eq(customer_code, result.data.customer_code),
         eq(measure_type, result.data.measure_type),
-        gte(
-          measure_datetime,
-          dayjs(result.data.measure_datetime).startOf('month').toDate(),
+        and(
+          gte(
+            measure_datetime,
+            dayjs(result.data.measure_datetime).startOf('month').toDate(),
+          ),
+          lte(
+            measure_datetime,
+            dayjs(result.data.measure_datetime).endOf('month').toDate(),
+          ),
         ),
       )
     },
