@@ -1,0 +1,1 @@
+ALTER TABLE "measures" ADD COLUMN "measure_value" integer;

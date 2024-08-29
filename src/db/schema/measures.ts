@@ -1,4 +1,4 @@
-import { boolean, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
+import { boolean, pgTable, text, timestamp, integer } from 'drizzle-orm/pg-core'
 import { v4 } from 'uuid'
 
 export const measures = pgTable('measures', {
@@ -10,4 +10,5 @@ export const measures = pgTable('measures', {
   has_confirmed: boolean('has_confirmed').notNull().default(false),
   image_url: text('image_url').notNull(),
   customer_code: text('customer_code').notNull(),
+  measure_value: integer('measure_value'),
 })

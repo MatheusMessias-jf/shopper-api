@@ -34,7 +34,7 @@ const uploadSchema = z.object({
   }),
 })
 
-router.post('/', async (req: Request, res: Response) => {
+router.post('/upload', async (req: Request, res: Response) => {
   const result = await uploadSchema.safeParseAsync(req.body)
   const writeFile = promisify(fs.writeFile)
   const unlink = promisify(fs.unlink)
@@ -117,6 +117,7 @@ router.post('/', async (req: Request, res: Response) => {
       image_url: uploadResponse.file.uri,
       measure_datetime: result.data.measure_datetime,
       measure_type: result.data.measure_type,
+      measure_value: actualMeasure,
     })
     .returning({ measure_uuid: measures.measure_uuid })
 

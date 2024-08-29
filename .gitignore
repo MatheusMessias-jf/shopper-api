@@ -1,3 +1,15 @@
 .env
 node_modules/
 dist/
+.vscode
+dist
+dist.new
+*.tsbuildinfo
+*.tgz
+.cache
+.turbo
+.rollup.cache
+dist-dts
+rollup.config-*.mjs
+*.log
+.DS_Store

@@ -8,6 +8,13 @@
       "when": 1724875017350,
       "tag": "0000_red_silver_centurion",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1724888345757,
+      "tag": "0001_glorious_sabra",
+      "breakpoints": true
     }
   ]
 }
